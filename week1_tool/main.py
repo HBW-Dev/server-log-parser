@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 Script: Log File Scanner
 Description:
