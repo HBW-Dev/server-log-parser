@@ -1,29 +1,43 @@
 """
-Script: Login File Scanner
+Script: Log File Scanner
 Description:
-    Reads a sever log file and filters for failure events.
-    Target Keyword: "FAILED"
+    Reads a server log file and filters for failure events.
+    Accepts filename via command line arguments.
 Author: HBW
 """
 
 import sys
+import argparse
 
 
-# Hardcoded for now, will switch CLI argument later
-target_file = "server.log"
+def main():
+    """
+    Docstring for main
+    """
 
-try:
+    # Set up Argument Parser
+    parser = argparse.ArgumentParser(description="Scan log file for failure events.")
+
+    parser.add_argument("filename", help="The path to the file you want to scan")
+
+    args = parser.parse_args()
+
+    target_file = args.filename
+
     print(f"Start scanning {target_file}")
 
-    with open(target_file, "r") as f:
-        for line in f:
-            # We only care about the lines indicating a crash/failure
-            if "FAILED" in line:
-                print(f"Found error log {line.strip()}")
-except FileNotFoundError as e:
-    print(f"[ERROR] File not found: {target_file}")
-    sys.exit(1)
+    try:
+        with open(target_file, "r") as f:
+            for line in f:
+                if "FAILED" in line:
+                    print(f"Found {line}")
+    except FileNotFoundError:
+        print(f"Not found: {target_file}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
 
-except Exception as e:
-    print(f"[ERROR] Unexpected error: {e}")
-    sys.exit(1)
+
+if __name__ == "__main__":
+    main()
