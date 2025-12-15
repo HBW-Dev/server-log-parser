@@ -9,6 +9,7 @@ Author: HBW
 
 import sys
 import argparse
+import re
 
 
 def main():
@@ -31,7 +32,16 @@ def main():
         with open(target_file, "r") as f:
             for line in f:
                 if "FAILED" in line:
-                    print(f"Found {line}")
+                    ip_pattern = r"\d+\.\d+\.\d+\.\d+"
+
+                    match = re.search(ip_pattern, line)
+
+                    if match:
+                        ip = match.group()
+                        print(f"Alert! Attack from IP: {ip}")
+                    else:
+                        print("Alert! FAILED found but no IP detected.")
+                        # print(f"Found {line}")
     except FileNotFoundError:
         print(f"Not found: {target_file}")
         sys.exit(1)
